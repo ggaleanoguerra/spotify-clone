@@ -1,0 +1,22 @@
+---
+import Library from "../icons/Library.astro";
+import Home from "../icons/Home.astro";
+import Search from "../icons/Search.astro";
+import AsideMenuItem from "./AsideMenuItem.astro";
+---
+
+<nav class="flex flex-col flex-1 gap-2">
+  <div class="bg-zinc-900 rounded-lg p-2">
+    <ul>
+      <AsideMenuItem href="/">
+        <Home />
+        Home
+      </AsideMenuItem>
+      <AsideMenuItem href="/#">
+        <Search />
+        Search
+      </AsideMenuItem>
+    </ul>
+  </div>
+  <Library />
+</nav>
