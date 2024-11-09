@@ -11,7 +11,10 @@ const { title } = Astro.props;
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="A clone of thhe spotify's player using Astro and the spotify's API by ggaleanoguerra" />
+    <meta
+      name="description"
+      content="A clone of thhe spotify's player using Astro and the spotify's API by ggaleanoguerra"
+    />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
@@ -21,15 +24,15 @@ const { title } = Astro.props;
     <div id="app" class="relative h-screen p-2 gap-2">
       <aside class="[grid-area:aside] flex-col flex overflow-y-auto">
         <AsideMenu />
-        <main class="[grid-area:main] rounded-lg bg-zinc-900 overflow-y-auto">
-          Main
-          <slot />
-        </main>
       </aside>
-
-      <footer class="[grid-area:player] min-h-[100px]">Aquí irá el reproductor</footer>
+      <main class="[grid-area:main] rounded-lg bg-zinc-900 overflow-y-auto">
+        Main
+        <slot />
+      </main>
+      <footer class="[grid-area:player] min-h-[100px]">
+        Aquí irá el reproductor
+      </footer>
     </div>
-   
   </body>
 </html>
 <style>
