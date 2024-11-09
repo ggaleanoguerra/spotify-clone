@@ -6,19 +6,23 @@
 
 <script type="module">
   document.addEventListener("DOMContentLoaded", async () => {
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get("token");
+   
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(";").shift();
+    }
+
+    const token = getCookie("access_token");
+    console.log("Token:", token);
 
     if (token) {
       try {
-        const response = await fetch(
-          "https://api.spotify.com/v1/me/playlists",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch("https://api.spotify.com/v1/me/playlists", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (!response.ok) {
           throw new Error("Error fetching playlists");
@@ -26,13 +30,11 @@
 
         const playlists = await response.json();
         const container = document.getElementById("playlist-container");
-        console.log(playlists);
 
         playlists.items.forEach((item) => {
           const link = document.createElement("a");
           link.href = item.external_urls.spotify;
-          link.className =
-            "playlist-item flex relative p-2 overflow-hidden items-center gap-5 rounded-md hover:bg-zinc-500";
+          link.className = "playlist-item flex relative p-2 overflow-hidden items-center gap-5 rounded-md hover:bg-zinc-500";
 
           const picture = document.createElement("picture");
           picture.className = "h-12 w-12 flex none";
@@ -46,7 +48,6 @@
           img.className = "w-full h-full rounded-md";
 
           picture.appendChild(img);
-
           link.appendChild(picture);
 
           const name = document.createElement("span");
@@ -57,10 +58,10 @@
         });
       } catch (error) {
         console.error("Error:", error);
-        window.location.href = "/api/login";
+        window.location.href = "/api/login";  
       }
     } else {
-      window.location.href = "/api/login";
+      window.location.href = "/api/login";  
     }
   });
 </script>
