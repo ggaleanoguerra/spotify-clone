@@ -29,27 +29,7 @@ const { title } = Astro.props;
 
       <footer class="[grid-area:player] min-h-[100px]">Player</footer>
     </div>
-    <script type="module">
-      document.addEventListener("DOMContentLoaded", async () => {
-        const params = new URLSearchParams(window.location.search);
-        const token = params.get("token");
-
-        if (token) {
-          const response = await fetch(
-            "https://api.spotify.com/v1/me/playlists",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          const playlists = await response.json();
-          console.log(playlists); // Imprime las playlists
-        } else {
-          window.location.href = "/api/login";
-        }
-      });
-    </script>
+   
   </body>
 </html>
 <style>
