@@ -3,7 +3,6 @@
 ---
 
 <div id="recommendations-container" class="flex flex-wrap mt-6 gap-4"></div>
-
 <script type="module">
   document.addEventListener("DOMContentLoaded", async () => {
     function getCookie(name) {
@@ -32,31 +31,48 @@
 
         const container = document.getElementById("recommendations-container");
 
+        const processedSongs = new Set();
+
         songs.items.forEach((item) => {
-          const link = document.createElement("a");
-          link.href = item.href;
-          link.className =
-            "playlist-item transition-all duration-300 flex relative p-2 overflow-hidden items-center gap-5 rounded-md hover:bg-zinc-500 shadow-lg hover:shadow-xl bg-zinc-500/30 w-32";
+          if (!processedSongs.has(item.id)) {
+            processedSongs.add(item.id);
 
-          const picture = document.createElement("picture");
-          picture.className = "aspect-square w-full h-auto flex none";
+            const artistNames = item.artists
+              .map((artist) => artist.name)
+              .join(", ");
+            console.log(artistNames);
 
-          const img = document.createElement("img");
-          img.src =
-            item.album && item.album.images && item.album.images.length > 0
-              ? item.album.images[0].url
-              : "https://storage.googleapis.com/pr-newsroom-wp/1/2023/05/Spotify_Primary_Logo_RGB_Green.png";
-          img.alt = item.name;
-          img.className = "object-cover w-full h-full rounded-md";
+            const link = document.createElement("a");
+            link.href = item.external_urls.spotify;
+            link.className =
+              "playlist-item transition-all duration-300 flex relative p-2 overflow-hidden gap-2 pb-5 rounded-md hover:bg-zinc-500 shadow-lg hover:shadow-xl bg-zinc-500/30 w-44 flex-col";
 
-          picture.appendChild(img);
-          link.appendChild(picture);
+            const picture = document.createElement("picture");
+            picture.className = "aspect-square w-full h-auto flex none";
 
-        //   const name = document.createElement("span");
-        //   name.textContent = item.name;
-        //   link.appendChild(name);
+            const img = document.createElement("img");
+            img.src =
+              item.album && item.album.images && item.album.images.length > 0
+                ? item.album.images[0].url
+                : "https://storage.googleapis.com/pr-newsroom-wp/1/2023/05/Spotify_Primary_Logo_RGB_Green.png";
+            img.alt = item.name;
+            img.className = "object-cover w-full h-full rounded-md";
 
-          container.appendChild(link);
+            picture.appendChild(img);
+            link.appendChild(picture);
+
+            const name = document.createElement("span");
+            name.textContent = item.name;
+            name.className = "p-x-2";
+            link.appendChild(name);
+
+            const artistData = document.createElement("span");
+            artistData.textContent = artistNames;
+            artistData.className = "p-x-2";
+            link.appendChild(artistData);
+
+            container.appendChild(link);
+          }
         });
       } catch (error) {
         console.error("Error:", error);

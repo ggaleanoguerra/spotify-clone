@@ -1,0 +1,29 @@
+
+---
+
+---
+<h1 id="greeting-container"></h1>
+
+<script type="module">
+  document.addEventListener("DOMContentLoaded", async () => {
+    const date = new Date();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
+    const currentTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    console.log(currentTime);
+
+    let message;
+    if (hours >= 0 && hours < 12) {
+      message = "Buenos días";
+    } else if (hours >= 12 && hours < 19) {
+      message = "Buenas tardes";
+    } else if (hours >= 19 && hours < 24) {
+      message = "Buenas noches";
+    }
+
+    const greetingContainer = document.getElementById("greeting-container");
+    greetingContainer.textContent = message;
+    greetingContainer.className = "text-4xl pt-10 font-bold";
+  });
+</script>

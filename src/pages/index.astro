@@ -1,19 +1,20 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import RecommendationsCard from "../components/RecommendationsCard.astro";
+import Greetings from "../components/Greetings.astro";
 ---
 
 <Layout title="Spotify clone by ggaleanoguerra">
   <div
-    id="recomentadions-container"
+   
     class="relative transition-all duration-1000 bg-green-900"
   >
     <div class="relative z-10 px6 m-4">
-      <h1 class="text-4xl">Hola mundo</h1>
+        <Greetings/>
         <RecommendationsCard />
     </div>
     <div
-      class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/80"
+      class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/80 rounded-md"
     >
     </div>
   </div>
