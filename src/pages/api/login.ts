@@ -4,7 +4,7 @@ export const GET: APIRoute = async ({ request }) => {
   const client_id = import.meta.env.SPOTIFY_CLIENT_ID;
   const redirect_uri = `${new URL(request.url).origin}/api/callback`;
   // console.log('redirect_uri', redirect_uri);
-  const scope = "playlist-read-private user-library-read";
+  const scope = "playlist-read-private user-library-read user-top-read";
 
   const spotifyAuthUrl = new URL("https://accounts.spotify.com/authorize");
   spotifyAuthUrl.searchParams.append("client_id", client_id);
