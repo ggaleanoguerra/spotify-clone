@@ -33,7 +33,7 @@
 
         playlists.items.forEach((item) => {
           const link = document.createElement("a");
-          link.href = item.external_urls.spotify;
+          link.href = `/playlist/${item.id}`;          
           link.className = "playlist-item flex relative p-2 overflow-hidden items-center gap-5 rounded-md hover:bg-zinc-500";
 
           const picture = document.createElement("picture");
@@ -46,7 +46,7 @@
               : "https://storage.googleapis.com/pr-newsroom-wp/1/2023/05/Spotify_Primary_Logo_RGB_Green.png";
           img.alt = item.name;
           img.className = "w-full h-full rounded-md";
-
+          img.setAttribute("transition", `name:playlist ${item.id} image`);
           picture.appendChild(img);
           link.appendChild(picture);
 
