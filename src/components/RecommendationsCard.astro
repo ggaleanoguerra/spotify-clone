@@ -1,8 +1,4 @@
----
-
----
-
-<div id="recommendations-container" class="flex flex-wrap mt-6 gap-4"></div>
+<div id="recommendations-container" class="flex flex-wrap mt-6 gap-4 w-auto"></div>
 <script type="module">
   document.addEventListener("DOMContentLoaded", async () => {
     function getCookie(name) {
@@ -61,15 +57,20 @@
             picture.appendChild(img);
             link.appendChild(picture);
 
-            const name = document.createElement("span");
+            const containerRecomendation = document.createElement("div");
+            containerRecomendation.className = "flex flex-col";
+
+            const name = document.createElement("h4");
             name.textContent = item.name;
-            name.className = "p-x-2";
-            link.appendChild(name);
+            name.className = "text-white text-sm";
+            containerRecomendation.appendChild(name);
 
             const artistData = document.createElement("span");
             artistData.textContent = artistNames;
-            artistData.className = "p-x-2";
-            link.appendChild(artistData);
+            artistData.className = "text-xs text-gray-400 mt-1";
+            containerRecomendation.appendChild(artistData);
+
+            link.appendChild(containerRecomendation);
 
             container.appendChild(link);
           }
