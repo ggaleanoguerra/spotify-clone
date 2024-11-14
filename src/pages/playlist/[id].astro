@@ -1,64 +1,20 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import Greetings from "../../components/Greetings.astro";
-import { onMount } from "solid-js";
+
 const { id } = Astro.params;
-let playlistData: {
-  name: string;
-  tracks: {
-    items: {
-      track: {
-        id: string;
-        name: string;
-        album: { images: { url: string }[] };
-        artists: { name: string }[];
-      };
-    }[];
-  };
-} = { name: "", tracks: { items: [] } };
-onMount(async () => {
-  const tokenCookie = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("access_token"));
-  const token = tokenCookie ? tokenCookie.split("=")[1] : null;
-
-  const response = await fetch(`https://api.spotify.com/v1/playlists/${id}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
-  if (response.ok) {
-    playlistData = await response.json();
-    console.log(playlistData);
-  } else {
-    console.error("Error al obtener la playlist");
-  }
-});
+console.log("Playlist ID:", id);
 ---
 
 <Layout title="Spotify clone by ggaleanoguerra">
-  <div class="relative flex flex-col h-full bg-zinc-900 overflow-x-hidden"
-  transition:name=`playlist ${id} box`>
-    <div class="relative z-10 px6 m-4">
-       <Greetings />
-      <h1>{playlistData ? playlistData.name : "Cargando..."}</h1>
-      {
-        playlistData && (
-          <ul>
-            {playlistData.tracks.items.map((track) => (
-              <li id={track.track.id}>
-                <img
-                  src={track.track.album.images[0].url}
-                  alt={track.track.name}
-                />
-                <p>
-                  {track.track.name} -{" "}
-                  {track.track.artists.map((artist) => artist.name).join(", ")}
-                </p>
-              </li>
-            ))}
-          </ul>
-        )
-      }
+  <div
+    id="playlist-container"
+    class="relative flex flex-col h-full bg-zinc-900 overflow-x-hidden"
+    transition:name={`playlist ${id} box`}
+  >
+    <div class="relative z-10 px-6 m-4">
+      <!-- <Greetings /> -->
+      <!-- <h1 id="playlist-title">Cargando...</h1> -->
+      <header id="info-playlist" class="flex flex-col gap-8 px-6 mt-10"></header>
     </div>
     <div
       class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/80 rounded-md"
@@ -66,3 +22,94 @@ onMount(async () => {
     </div>
   </div>
 </Layout>
+
+<script type="module">
+  document.addEventListener("DOMContentLoaded", async () => {
+    const pathParts = window.location.pathname.split("/");
+    const playlistId = pathParts[pathParts.indexOf("playlist") + 1];
+    console.log("Playlist ID:", playlistId); // Verify the ID
+
+    const tokenCookie = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("access_token"));
+    const token = tokenCookie ? tokenCookie.split("=")[1] : null;
+
+    if (!token) {
+      console.error("Token no encontrado");
+      window.location.href = "/api/login";
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://api.spotify.com/v1/playlists/${playlistId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (!response.ok) throw new Error("Error al obtener la playlist");
+
+      const playlistData = await response.json();
+      console.log(playlistData);
+
+      // document.getElementById("playlist-title").textContent = playlistData.name;
+
+      const playlistInfo = document.getElementById("info-playlist");
+      playlistInfo.innerHTML = ""; // Clear existing list
+
+      const picture = document.createElement("picture");
+      picture.className = "aspect-square w-52 h-52 flex none";
+
+      const img = document.createElement("img");
+      img.src =
+        playlistData.images && playlistData.images.length > 0
+          ? playlistData.images[0].url
+          : "https://storage.googleapis.com/pr-newsroom-wp/1/2023/05/Spotify_Primary_Logo_RGB_Green.png";
+      img.alt = playlistData.name;
+      img.className = "object-cover w-full h-full shadow-lg";
+
+      picture.appendChild(img);
+      playlistInfo.appendChild(picture);
+
+      const infoContainer = document.createElement("div");
+      infoContainer.className = "flex flex-col justify-between";
+
+      const playlistType = document.createElement("h2");
+      playlistType.className = "flex flex-1 items-end";
+      playlistType.textContent = "Playlist";
+      infoContainer.appendChild(playlistType);
+
+      const titleContainer = document.createElement("div");
+      const playlistTitle = document.createElement("h1");
+      playlistTitle.className = "text-5xl font-bold block text-white";
+      playlistTitle.textContent = playlistData.name;
+      const titleSpan = document.createElement("span");
+      titleSpan.setAttribute(
+        "transition:name",
+        `playlist ${playlistData.id} title`
+      );
+      titleContainer.appendChild(playlistTitle);
+      titleContainer.appendChild(titleSpan);
+      infoContainer.appendChild(titleContainer);
+
+      const artistsContainer = document.createElement("div");
+      artistsContainer.className = "flex-1 flex items-end";
+      const artistsInfo = document.createElement("div");
+      artistsInfo.className = "text-sm text-gray-300 font-normal";
+      const artistsSpan = document.createElement("div");
+      artistsSpan.innerHTML = `<span>${playlistData.owner.display_name}</span>`;
+      artistsInfo.appendChild(artistsSpan);
+      const songCount = document.createElement("p");
+      songCount.className = "mt-1";
+      songCount.innerHTML = `<span class="text-white">${playlistData.tracks.total} canciones</span>, ${Math.floor((playlistData.tracks.total * 3) / 60)} h aproximadamente`;
+      artistsInfo.appendChild(songCount);
+      artistsContainer.appendChild(artistsInfo);
+      infoContainer.appendChild(artistsContainer);
+
+      playlistInfo.appendChild(infoContainer);
+    } catch (error) {
+      console.error("Error al obtener la playlist:", error);
+    }
+  });
+</script>

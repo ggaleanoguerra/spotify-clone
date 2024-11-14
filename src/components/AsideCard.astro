@@ -35,6 +35,7 @@
           const link = document.createElement("a");
           link.href = `/playlist/${item.id}`;          
           link.className = "playlist-item flex relative p-2 overflow-hidden items-center gap-5 rounded-md hover:bg-zinc-500";
+          link.setAttribute("transition", `name:playlist ${item.id} box`);
 
           const picture = document.createElement("picture");
           picture.className = "h-12 w-12 flex none";
